@@ -569,7 +569,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
                 c.drawRoundRect(new RectF(mBarRect.left - 1f, mBarRect.top - 1f, mBarRect.right + 1f, mBarRect.bottom + 1f),
                         mRoundedBarRadius, mRoundedBarRadius, mHighlightPaint);
             else
-                c.drawRect(mBarRect, mHighBackPaint);
+                c.drawRect(mBarRect, mHighlightPaint);
         }
     }
 
