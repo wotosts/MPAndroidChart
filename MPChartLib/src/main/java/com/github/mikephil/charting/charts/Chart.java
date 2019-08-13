@@ -526,6 +526,8 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
             mChartTouchListener.setLastHighlighted(null);
         } else {
             mChartTouchListener.setLastHighlighted(highs[0]);
+            if(mXAxis != null)
+                mXAxis.setHighlightPosition(highs[0].getX());
         }
     }
 

@@ -133,6 +133,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     protected XAxisRenderer mXAxisRenderer;
 
+    protected boolean mDrawHighlightBackground = false;
+
     // /** the approximator object used for data filtering */
     // private Approximator mApproximator;
 
@@ -244,6 +246,9 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
         if (!mAxisRight.isDrawGridLinesBehindDataEnabled())
             mAxisRendererRight.renderGridLines(canvas);
+
+        if(mDrawHighlightBackground)
+            mRenderer.drawHighlightBackground(canvas, mIndicesToHighlight);
 
         // if highlighting is enabled
         if (valuesToHighlight())
@@ -1640,4 +1645,9 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
             mViewPortHandler.refresh(mViewPortHandler.getMatrixTouch(), this, true);
         }
     }
+
+    public void setDrawHighlightBackground(boolean draw) {
+        mDrawHighlightBackground = draw;
+    }
+
 }

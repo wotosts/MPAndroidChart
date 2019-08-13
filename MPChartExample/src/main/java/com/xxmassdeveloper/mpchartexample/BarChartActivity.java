@@ -3,6 +3,7 @@ package com.xxmassdeveloper.mpchartexample;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.model.GradientColor;
+import com.github.mikephil.charting.renderer.BarChartRenderer;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.xxmassdeveloper.mpchartexample.custom.DayAxisValueFormatter;
 import com.xxmassdeveloper.mpchartexample.custom.MyValueFormatter;
@@ -93,7 +95,9 @@ public class BarChartActivity extends DemoBase implements OnSeekBarChangeListene
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f); // only intervals of 1 day
         xAxis.setLabelCount(7);
+        xAxis.setTextColor(Color.BLACK);
         xAxis.setValueFormatter(xAxisFormatter);
+        xAxis.setHighlightTextColor(Color.YELLOW);
 
         ValueFormatter custom = new MyValueFormatter("$");
 
@@ -126,6 +130,8 @@ public class BarChartActivity extends DemoBase implements OnSeekBarChangeListene
         XYMarkerView mv = new XYMarkerView(this, xAxisFormatter);
         mv.setChartView(chart); // For bounds control
         chart.setMarker(mv); // Set the marker to the chart
+        chart.setRenderer(new BarChartRenderer(chart, chart.getAnimator(), chart.getViewPortHandler(), true));
+        chart.setDrawHighlightBackground(true);
 
         // setting data
         seekBarY.setProgress(50);
@@ -188,7 +194,10 @@ public class BarChartActivity extends DemoBase implements OnSeekBarChangeListene
             gradientColors.add(new GradientColor(startColor4, endColor4));
             gradientColors.add(new GradientColor(startColor5, endColor5));
 
-            set1.setGradientColors(gradientColors);
+            //set1.setGradientColors(gradientColors);
+            set1.setValueStepColors(new int[]{Color.LTGRAY, ContextCompat.getColor(this, android.R.color.holo_orange_light),
+                    ContextCompat.getColor(this, android.R.color.holo_red_light)});
+            set1.setValueSteps(new float[]{10, 20, 40});
 
             ArrayList<IBarDataSet> dataSets = new ArrayList<>();
             dataSets.add(set1);
@@ -196,7 +205,7 @@ public class BarChartActivity extends DemoBase implements OnSeekBarChangeListene
             BarData data = new BarData(dataSets);
             data.setValueTextSize(10f);
             data.setValueTypeface(tfLight);
-            data.setBarWidth(0.9f);
+            data.setBarWidth(0.5f);
 
             chart.setData(data);
         }

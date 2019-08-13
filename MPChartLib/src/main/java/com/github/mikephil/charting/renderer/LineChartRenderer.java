@@ -5,16 +5,20 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 
 import com.github.mikephil.charting.animation.ChartAnimator;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
@@ -57,6 +61,8 @@ public class LineChartRenderer extends LineRadarRenderer {
     protected Path cubicPath = new Path();
     protected Path cubicFillPath = new Path();
 
+    protected Paint mHighBackPaint;
+
     public LineChartRenderer(LineDataProvider chart, ChartAnimator animator,
                              ViewPortHandler viewPortHandler) {
         super(animator, viewPortHandler);
@@ -65,6 +71,10 @@ public class LineChartRenderer extends LineRadarRenderer {
         mCirclePaintInner = new Paint(Paint.ANTI_ALIAS_FLAG);
         mCirclePaintInner.setStyle(Paint.Style.FILL);
         mCirclePaintInner.setColor(Color.WHITE);
+
+        mHighBackPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mHighBackPaint.setStyle(Paint.Style.FILL);
+        mHighBackPaint.setColor(Color.parseColor("#32dbdbdb"));
     }
 
     @Override
@@ -714,6 +724,40 @@ public class LineChartRenderer extends LineRadarRenderer {
             // draw the lines
             drawHighlightLines(c, (float) pix.x, (float) pix.y, set);
         }
+    }
+
+    @Override
+    public void drawHighlightBackground(Canvas c, Highlight[] indices) {
+        if (indices == null)
+            return;
+
+        LineData lineData = mChart.getLineData();
+
+        for (Highlight highlight : indices) {
+            ILineDataSet set = lineData.getDataSetByIndex(highlight.getDataSetIndex());
+
+            if (set == null || !set.isHighlightEnabled())
+                continue;
+
+            Entry e = set.getEntryForXValue(highlight.getX(), highlight.getY());
+
+            if (!isInBoundsX(e, set))
+                continue;
+
+            Transformer trans = mChart.getTransformer(set.getAxisDependency());
+
+            float xSpace = 0;
+            float ySpace = Utils.convertDpToPixel(15);
+            RectF rect = new RectF(e.getX() - 0.5f - xSpace, mViewPortHandler.contentTop() - ySpace,
+                    e.getX() + 0.5f + xSpace, mViewPortHandler.contentBottom() + ySpace);
+
+            trans.rectToPixelPhase(rect, mAnimator.getPhaseY());
+            c.drawRect(rect, mHighBackPaint);
+        }
+    }
+
+    public void setHighBackPaintColor(int color) {
+        mHighBackPaint.setColor(color);
     }
 
     /**

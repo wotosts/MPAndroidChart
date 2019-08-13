@@ -43,6 +43,10 @@ public abstract class ComponentBase {
      */
     protected int mTextColor = Color.BLACK;
 
+    protected int mHighlightTextColor = Color.BLUE;
+
+    protected float mHighlightPosition = -1;
+
 
     public ComponentBase() {
 
@@ -149,6 +153,22 @@ public abstract class ComponentBase {
      */
     public int getTextColor() {
         return mTextColor;
+    }
+
+    public void setHighlightTextColor(int highlightTextColor) {
+        this.mHighlightTextColor = highlightTextColor;
+    }
+
+    public int getHighlightTextColor() {
+        return mHighlightTextColor;
+    }
+
+    public void setHighlightPosition(float highlightPosition) {
+        this.mHighlightPosition = highlightPosition;
+    }
+
+    public float getHighlightPosition() {
+        return mHighlightPosition;
     }
 
     /**

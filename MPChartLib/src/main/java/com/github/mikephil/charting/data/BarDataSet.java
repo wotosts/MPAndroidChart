@@ -42,6 +42,9 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
             "Stack"
     };
 
+    private int[] valueStepColors = null;
+    private float[] valueSteps = null;
+
     public BarDataSet(List<BarEntry> yVals, String label) {
         super(yVals, label);
 
@@ -233,5 +236,23 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
     @Override
     public String[] getStackLabels() {
         return mStackLabels;
+    }
+
+    public void setValueStepColors(int[] colors) {
+        this.valueStepColors = colors;
+    }
+
+    @Override
+    public int[] getValueStepColors() {
+        return valueStepColors;
+    }
+
+    public void setValueSteps(float[] steps) {
+        this.valueSteps = steps;
+    }
+
+    @Override
+    public float[] getValueSteps() {
+        return valueSteps;
     }
 }

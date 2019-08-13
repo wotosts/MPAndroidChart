@@ -278,4 +278,9 @@ public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
             c.drawCircle(pointBuffer[0], pointBuffer[1], shapeHalf, mHighlightPaint);
         }
     }
+
+    @Override
+    public void drawHighlightBackground(Canvas c, Highlight[] indices) {
+
+    }
 }

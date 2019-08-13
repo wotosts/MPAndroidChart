@@ -34,6 +34,7 @@ public abstract class AxisRenderer extends Renderer {
      * paint for the x-label values
      */
     protected Paint mAxisLabelPaint;
+    protected Paint mAxisLabelHighlightPaint;
 
     /**
      * paint for the line surrounding the chart
@@ -68,6 +69,8 @@ public abstract class AxisRenderer extends Renderer {
 
             mLimitLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             mLimitLinePaint.setStyle(Paint.Style.STROKE);
+
+            mAxisLabelHighlightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         }
     }
 
@@ -107,6 +110,10 @@ public abstract class AxisRenderer extends Renderer {
      */
     public Transformer getTransformer() {
         return mTrans;
+    }
+
+    public Paint getmAxisLabelHighlightPaint() {
+        return mAxisLabelHighlightPaint;
     }
 
     /**

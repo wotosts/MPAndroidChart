@@ -988,6 +988,11 @@ public class PieChartRenderer extends DataRenderer {
         MPPointF.recycleInstance(center);
     }
 
+    @Override
+    public void drawHighlightBackground(Canvas c, Highlight[] indices) {
+
+    }
+
     /**
      * This gives all pie-slices a rounded edge.
      *

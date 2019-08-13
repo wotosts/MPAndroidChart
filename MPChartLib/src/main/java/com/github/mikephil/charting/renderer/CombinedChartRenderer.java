@@ -144,6 +144,11 @@ public class CombinedChartRenderer extends DataRenderer {
         }
     }
 
+    @Override
+    public void drawHighlightBackground(Canvas c, Highlight[] indices) {
+
+    }
+
     /**
      * Returns the sub-renderer object at the specified index.
      *

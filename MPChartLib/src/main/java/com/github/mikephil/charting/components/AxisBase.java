@@ -746,6 +746,8 @@ public abstract class AxisBase extends ComponentBase {
 
         // actual range
         this.mAxisRange = Math.abs(max - min);
+
+        this.mHighlightPosition = min - 1;
     }
 
     /**

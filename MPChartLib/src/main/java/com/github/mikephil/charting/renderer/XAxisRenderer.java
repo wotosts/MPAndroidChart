@@ -31,6 +31,10 @@ public class XAxisRenderer extends AxisRenderer {
         mAxisLabelPaint.setColor(Color.BLACK);
         mAxisLabelPaint.setTextAlign(Align.CENTER);
         mAxisLabelPaint.setTextSize(Utils.convertDpToPixel(10f));
+
+        mAxisLabelHighlightPaint.setColor(Color.RED);
+        mAxisLabelHighlightPaint.setTextAlign(Align.CENTER);
+        mAxisLabelHighlightPaint.setTextSize(Utils.convertDpToPixel(10f));
     }
 
     protected void setupGridPaint() {
@@ -112,7 +116,11 @@ public class XAxisRenderer extends AxisRenderer {
         mAxisLabelPaint.setTextSize(mXAxis.getTextSize());
         mAxisLabelPaint.setColor(mXAxis.getTextColor());
 
-        MPPointF pointF = MPPointF.getInstance(0,0);
+        mAxisLabelHighlightPaint.setTypeface(mXAxis.getTypeface());
+        mAxisLabelHighlightPaint.setTextSize(mXAxis.getTextSize());
+        mAxisLabelHighlightPaint.setColor(mXAxis.getHighlightTextColor());
+
+        MPPointF pointF = MPPointF.getInstance(0, 0);
         if (mXAxis.getPosition() == XAxisPosition.TOP) {
             pointF.x = 0.5f;
             pointF.y = 1.0f;
@@ -182,14 +190,17 @@ public class XAxisRenderer extends AxisRenderer {
         boolean centeringEnabled = mXAxis.isCenterAxisLabelsEnabled();
 
         float[] positions = new float[mXAxis.mEntryCount * 2];
+        float[] entryPositions = new float[mXAxis.mEntryCount * 2];
 
         for (int i = 0; i < positions.length; i += 2) {
 
             // only fill x values
             if (centeringEnabled) {
                 positions[i] = mXAxis.mCenteredEntries[i / 2];
+                entryPositions[i] = mXAxis.mCenteredEntries[i / 2];
             } else {
                 positions[i] = mXAxis.mEntries[i / 2];
+                entryPositions[i] = mXAxis.mEntries[i / 2];
             }
         }
 
@@ -221,7 +232,10 @@ public class XAxisRenderer extends AxisRenderer {
                     }
                 }
 
-                drawLabel(c, label, x, pos, anchor, labelRotationAngleDegrees);
+                if (Float.compare(mXAxis.getHighlightPosition(), entryPositions[i]) != 0)
+                    drawLabel(c, label, x, pos, anchor, labelRotationAngleDegrees);
+                else if (Float.compare(mXAxis.getHighlightPosition(), entryPositions[i]) == 0 && mXAxis.getHighlightPosition() > mXAxis.getAxisMinimum() - 1)           // highlight
+                    drawHighlightLabel(c, label, x, pos, anchor, labelRotationAngleDegrees);
             }
         }
     }
@@ -229,8 +243,14 @@ public class XAxisRenderer extends AxisRenderer {
     protected void drawLabel(Canvas c, String formattedLabel, float x, float y, MPPointF anchor, float angleDegrees) {
         Utils.drawXAxisValue(c, formattedLabel, x, y, mAxisLabelPaint, anchor, angleDegrees);
     }
+
+    protected void drawHighlightLabel(Canvas c, String formattedLabel, float x, float y, MPPointF anchor, float angleDegrees) {
+        Utils.drawXAxisValue(c, formattedLabel, x, y, mAxisLabelHighlightPaint, anchor, angleDegrees);
+    }
+
     protected Path mRenderGridLinesPath = new Path();
     protected float[] mRenderGridLinesBuffer = new float[2];
+
     @Override
     public void renderGridLines(Canvas c) {
 
@@ -240,7 +260,7 @@ public class XAxisRenderer extends AxisRenderer {
         int clipRestoreCount = c.save();
         c.clipRect(getGridClippingRect());
 
-        if(mRenderGridLinesBuffer.length != mAxis.mEntryCount * 2){
+        if (mRenderGridLinesBuffer.length != mAxis.mEntryCount * 2) {
             mRenderGridLinesBuffer = new float[mXAxis.mEntryCount * 2];
         }
         float[] positions = mRenderGridLinesBuffer;
