@@ -3,6 +3,8 @@ package com.github.mikephil.charting.renderer;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 
@@ -43,6 +45,8 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
     protected boolean mDrawRoundedBars = false;
     protected float mRoundedBarRadius = 6f;
     protected Paint mHighBackPaint;
+
+    protected boolean mDrawHighlightChangedColor = false;
 
     public BarChartRenderer(BarDataProvider chart, ChartAnimator animator,
                             ViewPortHandler viewPortHandler) {
@@ -100,7 +104,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
     }
 
     @Override
-    public void drawData(Canvas c) {
+    public void drawData(Canvas c, Highlight[] highlights) {
 
         BarData barData = mChart.getBarData();
 
@@ -109,14 +113,23 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
             IBarDataSet set = barData.getDataSetByIndex(i);
 
             if (set.isVisible()) {
-                drawDataSet(c, set, i);
+                drawDataSet(c, set, i, highlights);
             }
         }
     }
 
     private RectF mBarShadowRectBuffer = new RectF();
 
-    protected void drawDataSet(Canvas c, IBarDataSet dataSet, int index) {
+    private boolean getIsHighlight(float x, Highlight[] highlights) {
+        for (Highlight highlight : highlights) {
+            if (Float.compare(x, highlight.getX()) == 0)
+                return true;
+        }
+
+        return false;
+    }
+
+    protected void drawDataSet(Canvas c, IBarDataSet dataSet, int index, Highlight[] highlights) {
 
         Transformer trans = mChart.getTransformer(dataSet.getAxisDependency());
 
@@ -196,7 +209,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
                 // is out of bounds, reuse colors.
                 mRenderPaint.setColor(dataSet.getColor(j / 4));
             } else if (hasStepColor) {
-                mRenderPaint.setColor(dataSet.getValueStepColors()[dataSet.getValueStepColors().length-1]);
+                mRenderPaint.setColor(dataSet.getValueStepColors()[dataSet.getValueStepColors().length - 1]);
                 for (int i = 0; i < dataSet.getValueSteps().length; i++) {
                     if (dataSet.getEntryForIndex(j / 4).getY() < dataSet.getValueSteps()[i]) {
                         mRenderPaint.setColor(dataSet.getValueStepColors()[i]);
@@ -516,6 +529,13 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
             mHighlightPaint.setColor(set.getHighLightColor());
             mHighlightPaint.setAlpha(set.getHighLightAlpha());
 
+            if (mDrawHighlightChangedColor) {
+                mHighlightPaint.setStyle(Paint.Style.FILL);
+                mHighlightPaint.setStrokeWidth(0);
+                mHighlightPaint.setColor(set.getHighLightChangeColor());
+                //mHighlightPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+            }
+
             boolean isStack = (high.getStackIndex() >= 0 && e.isStacked()) ? true : false;
 
             final float y1;
@@ -545,7 +565,11 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
             setHighlightDrawPos(high, mBarRect);
 
-            c.drawRect(mBarRect, mHighlightPaint);
+            if (mDrawRoundedBars)
+                c.drawRoundRect(new RectF(mBarRect.left - 1f, mBarRect.top - 1f, mBarRect.right + 1f, mBarRect.bottom + 1f),
+                        mRoundedBarRadius, mRoundedBarRadius, mHighlightPaint);
+            else
+                c.drawRect(mBarRect, mHighBackPaint);
         }
     }
 
@@ -594,5 +618,13 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
     public void setHighBackPaintColor(int color) {
         mHighBackPaint.setColor(color);
+    }
+
+    public void setDrawRoundedBars(boolean isDraw) {
+        mDrawRoundedBars = isDraw;
+    }
+
+    public void setDrawHighlightChangedColor(boolean isDraw) {
+        mDrawHighlightChangedColor = isDraw;
     }
 }

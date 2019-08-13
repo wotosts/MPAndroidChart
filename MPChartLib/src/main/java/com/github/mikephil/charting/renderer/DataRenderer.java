@@ -120,8 +120,9 @@ public abstract class DataRenderer extends Renderer {
      * Draws the actual data in form of lines, bars, ... depending on Renderer subclass.
      *
      * @param c
+     * @param highlights
      */
-    public abstract void drawData(Canvas c);
+    public abstract void drawData(Canvas c, Highlight[] highlights);
 
     /**
      * Loops over all Entrys and draws their values.

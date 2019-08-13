@@ -65,4 +65,6 @@ public interface IBarDataSet extends IBarLineScatterCandleBubbleDataSet<BarEntry
     int[] getValueStepColors();
 
     float[] getValueSteps();
+
+    int getHighLightChangeColor();
 }

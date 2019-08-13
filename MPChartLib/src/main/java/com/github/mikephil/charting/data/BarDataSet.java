@@ -29,6 +29,7 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
      * the alpha value used to draw the highlight indicator bar
      */
     private int mHighLightAlpha = 120;
+    private int mHighLightChangeColor = Color.RED;
 
     /**
      * the overall entry count, including counting each stack-value individually
@@ -48,7 +49,7 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
     public BarDataSet(List<BarEntry> yVals, String label) {
         super(yVals, label);
 
-        mHighLightColor = Color.rgb(0, 0, 0);
+        mHighLightChangeColor = Color.rgb(0, 0, 0);
 
         calcStackSize(yVals);
         calcEntryCountIncludingStacks(yVals);
@@ -72,6 +73,9 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
         barDataSet.mBarBorderWidth = mBarBorderWidth;
         barDataSet.mStackLabels = mStackLabels;
         barDataSet.mHighLightAlpha = mHighLightAlpha;
+        barDataSet.valueStepColors = valueStepColors;
+        barDataSet.valueSteps = valueSteps;
+        barDataSet.mHighLightChangeColor = mHighLightChangeColor;
     }
 
     /**
@@ -254,5 +258,14 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
     @Override
     public float[] getValueSteps() {
         return valueSteps;
+    }
+
+    @Override
+    public int getHighLightChangeColor() {
+        return mHighLightChangeColor;
+    }
+
+    public void setHighLightChangeColor(int color) {
+        this.mHighLightChangeColor = color;
     }
 }

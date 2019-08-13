@@ -130,7 +130,9 @@ public class BarChartActivity extends DemoBase implements OnSeekBarChangeListene
         XYMarkerView mv = new XYMarkerView(this, xAxisFormatter);
         mv.setChartView(chart); // For bounds control
         chart.setMarker(mv); // Set the marker to the chart
-        chart.setRenderer(new BarChartRenderer(chart, chart.getAnimator(), chart.getViewPortHandler(), true));
+        BarChartRenderer renderer = new BarChartRenderer(chart, chart.getAnimator(), chart.getViewPortHandler(), true);
+        renderer.setDrawHighlightChangedColor(true);
+        chart.setRenderer(renderer);
         chart.setDrawHighlightBackground(true);
 
         // setting data
@@ -198,6 +200,7 @@ public class BarChartActivity extends DemoBase implements OnSeekBarChangeListene
             set1.setValueStepColors(new int[]{Color.LTGRAY, ContextCompat.getColor(this, android.R.color.holo_orange_light),
                     ContextCompat.getColor(this, android.R.color.holo_red_light)});
             set1.setValueSteps(new float[]{10, 20, 40});
+            set1.setHighLightChangeColor(Color.GREEN);
 
             ArrayList<IBarDataSet> dataSets = new ArrayList<>();
             dataSets.add(set1);

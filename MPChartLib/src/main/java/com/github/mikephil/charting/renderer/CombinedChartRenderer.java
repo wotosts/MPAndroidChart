@@ -83,10 +83,10 @@ public class CombinedChartRenderer extends DataRenderer {
     }
 
     @Override
-    public void drawData(Canvas c) {
+    public void drawData(Canvas c, Highlight[] highlights) {
 
         for (DataRenderer renderer : mRenderers)
-            renderer.drawData(c);
+            renderer.drawData(c, highlights);
     }
 
     @Override

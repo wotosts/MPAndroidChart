@@ -52,7 +52,7 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
     private RectF mBarShadowRectBuffer = new RectF();
 
     @Override
-    protected void drawDataSet(Canvas c, IBarDataSet dataSet, int index) {
+    protected void drawDataSet(Canvas c, IBarDataSet dataSet, int index, Highlight[] highlights) {
 
         Transformer trans = mChart.getTransformer(dataSet.getAxisDependency());
 
